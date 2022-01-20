@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BRAM_Manager", "BRAM_Manager\BRAM_Manager.csproj", "{54421FA0-0A27-424E-B119-6D62786C6CDF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54421FA0-0A27-424E-B119-6D62786C6CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54421FA0-0A27-424E-B119-6D62786C6CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54421FA0-0A27-424E-B119-6D62786C6CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54421FA0-0A27-424E-B119-6D62786C6CDF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22589D6F-0E10-4619-BBBA-C9EB792F8F3C}
+	EndGlobalSection
+EndGlobal
