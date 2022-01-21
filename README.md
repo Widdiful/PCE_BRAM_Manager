@@ -2,6 +2,9 @@
 A simple PC Engine BRAM (Backup RAM) Manager. Use this to manage the data within PC Engine backup memory files.
 These files can also be transferred to and from real hardware, detailed below, or used with emulators.
 
+![image](https://user-images.githubusercontent.com/8471483/150586497-7533613d-6088-4f57-a0bc-535fd23ccd1f.png)
+
+
 ## Usage
 * Open one or two BRAM files with the browse buttons, or create a new one with File > New...
 * Select the save file you would like to manage.
