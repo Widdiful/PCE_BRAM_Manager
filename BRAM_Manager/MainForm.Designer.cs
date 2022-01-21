@@ -23,8 +23,11 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newBRAMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LeftList = new System.Windows.Forms.ListBox();
             this.RightList = new System.Windows.Forms.ListBox();
             this.LeftAddress = new System.Windows.Forms.TextBox();
@@ -39,6 +42,8 @@
             this.RightSave = new System.Windows.Forms.Button();
             this.LeftFreeSpace = new System.Windows.Forms.Label();
             this.RightFreeSpace = new System.Windows.Forms.Label();
+            this.LeftEdited = new System.Windows.Forms.Label();
+            this.RightEdited = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,9 +59,26 @@
             // 
             // fileToolStripMenuItem
             // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newBRAMToolStripMenuItem,
+            this.clearAllToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
+            // 
+            // newBRAMToolStripMenuItem
+            // 
+            this.newBRAMToolStripMenuItem.Name = "newBRAMToolStripMenuItem";
+            this.newBRAMToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.newBRAMToolStripMenuItem.Text = "New BRAM";
+            this.newBRAMToolStripMenuItem.Click += new System.EventHandler(this.newBRAMToolStripMenuItem_Click);
+            // 
+            // clearAllToolStripMenuItem
+            // 
+            this.clearAllToolStripMenuItem.Name = "clearAllToolStripMenuItem";
+            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.clearAllToolStripMenuItem.Text = "Clear All";
+            this.clearAllToolStripMenuItem.Click += new System.EventHandler(this.clearAllToolStripMenuItem_Click);
             // 
             // LeftList
             // 
@@ -190,11 +212,33 @@
             this.RightFreeSpace.TabIndex = 14;
             this.RightFreeSpace.Text = "          ";
             // 
+            // LeftEdited
+            // 
+            this.LeftEdited.AutoSize = true;
+            this.LeftEdited.Location = new System.Drawing.Point(95, 285);
+            this.LeftEdited.Name = "LeftEdited";
+            this.LeftEdited.Size = new System.Drawing.Size(40, 13);
+            this.LeftEdited.TabIndex = 15;
+            this.LeftEdited.Text = "Edited ";
+            this.LeftEdited.Visible = false;
+            // 
+            // RightEdited
+            // 
+            this.RightEdited.AutoSize = true;
+            this.RightEdited.Location = new System.Drawing.Point(321, 285);
+            this.RightEdited.Name = "RightEdited";
+            this.RightEdited.Size = new System.Drawing.Size(40, 13);
+            this.RightEdited.TabIndex = 16;
+            this.RightEdited.Text = "Edited ";
+            this.RightEdited.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(370, 306);
+            this.Controls.Add(this.RightEdited);
+            this.Controls.Add(this.LeftEdited);
             this.Controls.Add(this.RightFreeSpace);
             this.Controls.Add(this.LeftFreeSpace);
             this.Controls.Add(this.RightSave);
@@ -210,9 +254,11 @@
             this.Controls.Add(this.RightList);
             this.Controls.Add(this.LeftList);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "MainForm";
+            this.Text = "BRAM Manager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -238,6 +284,10 @@
         private System.Windows.Forms.Button RightSave;
         private System.Windows.Forms.Label LeftFreeSpace;
         private System.Windows.Forms.Label RightFreeSpace;
+        private System.Windows.Forms.ToolStripMenuItem newBRAMToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearAllToolStripMenuItem;
+        private System.Windows.Forms.Label LeftEdited;
+        private System.Windows.Forms.Label RightEdited;
     }
 }
 
