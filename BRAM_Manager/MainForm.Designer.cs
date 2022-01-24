@@ -85,16 +85,16 @@
             this.LeftList.FormattingEnabled = true;
             this.LeftList.Location = new System.Drawing.Point(12, 27);
             this.LeftList.Name = "LeftList";
-            this.LeftList.Size = new System.Drawing.Size(120, 199);
+            this.LeftList.Size = new System.Drawing.Size(130, 199);
             this.LeftList.TabIndex = 1;
             this.LeftList.SelectedIndexChanged += new System.EventHandler(this.LeftList_SelectedIndexChanged);
             // 
             // RightList
             // 
             this.RightList.FormattingEnabled = true;
-            this.RightList.Location = new System.Drawing.Point(238, 27);
+            this.RightList.Location = new System.Drawing.Point(229, 27);
             this.RightList.Name = "RightList";
-            this.RightList.Size = new System.Drawing.Size(120, 199);
+            this.RightList.Size = new System.Drawing.Size(129, 199);
             this.RightList.TabIndex = 2;
             this.RightList.SelectedIndexChanged += new System.EventHandler(this.RightList_SelectedIndexChanged);
             // 
@@ -103,20 +103,20 @@
             this.LeftAddress.Location = new System.Drawing.Point(12, 232);
             this.LeftAddress.Name = "LeftAddress";
             this.LeftAddress.ReadOnly = true;
-            this.LeftAddress.Size = new System.Drawing.Size(120, 20);
+            this.LeftAddress.Size = new System.Drawing.Size(130, 20);
             this.LeftAddress.TabIndex = 3;
             // 
             // RightAddress
             // 
-            this.RightAddress.Location = new System.Drawing.Point(238, 232);
+            this.RightAddress.Location = new System.Drawing.Point(229, 232);
             this.RightAddress.Name = "RightAddress";
             this.RightAddress.ReadOnly = true;
-            this.RightAddress.Size = new System.Drawing.Size(120, 20);
+            this.RightAddress.Size = new System.Drawing.Size(129, 20);
             this.RightAddress.TabIndex = 4;
             // 
             // LeftBrowse
             // 
-            this.LeftBrowse.Location = new System.Drawing.Point(75, 259);
+            this.LeftBrowse.Location = new System.Drawing.Point(86, 259);
             this.LeftBrowse.Name = "LeftBrowse";
             this.LeftBrowse.Size = new System.Drawing.Size(56, 23);
             this.LeftBrowse.TabIndex = 5;
@@ -186,7 +186,7 @@
             // 
             // RightSave
             // 
-            this.RightSave.Location = new System.Drawing.Point(238, 258);
+            this.RightSave.Location = new System.Drawing.Point(229, 258);
             this.RightSave.Name = "RightSave";
             this.RightSave.Size = new System.Drawing.Size(56, 23);
             this.RightSave.TabIndex = 12;
@@ -206,7 +206,7 @@
             // RightFreeSpace
             // 
             this.RightFreeSpace.AutoSize = true;
-            this.RightFreeSpace.Location = new System.Drawing.Point(235, 285);
+            this.RightFreeSpace.Location = new System.Drawing.Point(226, 285);
             this.RightFreeSpace.Name = "RightFreeSpace";
             this.RightFreeSpace.Size = new System.Drawing.Size(37, 13);
             this.RightFreeSpace.TabIndex = 14;
@@ -215,21 +215,23 @@
             // LeftEdited
             // 
             this.LeftEdited.AutoSize = true;
-            this.LeftEdited.Location = new System.Drawing.Point(95, 285);
+            this.LeftEdited.Location = new System.Drawing.Point(102, 285);
             this.LeftEdited.Name = "LeftEdited";
             this.LeftEdited.Size = new System.Drawing.Size(40, 13);
             this.LeftEdited.TabIndex = 15;
             this.LeftEdited.Text = "Edited ";
+            this.LeftEdited.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.LeftEdited.Visible = false;
             // 
             // RightEdited
             // 
             this.RightEdited.AutoSize = true;
-            this.RightEdited.Location = new System.Drawing.Point(321, 285);
+            this.RightEdited.Location = new System.Drawing.Point(318, 285);
             this.RightEdited.Name = "RightEdited";
             this.RightEdited.Size = new System.Drawing.Size(40, 13);
             this.RightEdited.TabIndex = 16;
             this.RightEdited.Text = "Edited ";
+            this.RightEdited.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.RightEdited.Visible = false;
             // 
             // MainForm
@@ -254,6 +256,7 @@
             this.Controls.Add(this.RightList);
             this.Controls.Add(this.LeftList);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";

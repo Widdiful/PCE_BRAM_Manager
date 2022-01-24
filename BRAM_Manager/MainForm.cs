@@ -11,8 +11,26 @@ using System.IO;
 
 namespace BRAM_Manager {
     public partial class MainForm : Form {
-        public string initialDirectory = "c:\\";
+        public string savedInitialDirectory = "c:\\";
         public BRAM leftBRAM, rightBRAM;
+
+        public char[] characterMap = new char[] {
+        ' ', '▁', '▂', '▃', '▄', '▅', '▆', '▇', '█', '♤', '♡', '◇', '♧', '○', '●', '/',
+        '\\', '円', '年', '月', '日', '時', '分', '秒', '◢', '◣', '◥', '◤', '→', '←', '↑', '↓',
+        ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?',
+        '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+        'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '￥', ']', '^', '_',
+        ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+        'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', ':', '}', '~', '☓',
+        ' ', '。', '「', '」', '、', '・', 'を', 'ぁ', '╭', '─', '╮', '│', '│', '╰', '─', '╯',
+        'ー', 'あ', 'い', 'う', 'え', 'お', 'か', 'き', 'く', 'け', 'こ', 'さ', 'し', 'す', 'せ', 'そ',
+        '　', '。', '「', '」', '、', '・', 'ヲ', 'ァ', '┬', '│', '┴', 'ォ', 'ャ', 'ュ', 'ョ', 'ッ',
+        'ー', 'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ', 'サ', 'シ', 'ス', 'セ', 'ソ',
+        'タ', 'チ', 'ツ', 'テ', 'ト', 'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ハ', 'ヒ', 'フ', 'ヘ', 'ホ', 'マ',
+        'ミ', 'ム', 'メ', 'モ', 'ヤ', 'ユ', 'ヨ', 'ラ', 'リ', 'ル', 'レ', 'ロ', 'ワ', 'ン', '゛', '゜',
+        'た', 'ち', 'つ', 'て', 'と', 'な', 'に', 'ぬ', 'ね', 'の', 'は', 'ひ', 'ふ', 'へ', 'ほ', 'ま',
+        'み', 'む', 'め', 'も', 'や', 'ゆ', 'よ', 'ら', 'り', 'る', 'れ', 'ろ', 'わ', 'ん', '゛', '©'};
 
         public struct BRAM {
             public byte[] data;
@@ -33,14 +51,20 @@ namespace BRAM_Manager {
 
         public MainForm() {
             InitializeComponent();
+
+            savedInitialDirectory = Properties.Settings.Default.savedInitialDirectory;
         }
 
         //--------------------------------------------------
         // Main functions
         //--------------------------------------------------
 
-        // Opens a file browser and returns the path to the selected file
         public string OpenFileBrowser() {
+            return OpenFileBrowser(savedInitialDirectory);
+        }
+
+        // Opens a file browser and returns the path to the selected file
+        public string OpenFileBrowser(string initialDirectory) {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                 openFileDialog.InitialDirectory = initialDirectory;
                 openFileDialog.Filter = "BRAM files (*.bup;*.sav)|*.bup;*.sav|All files (*.*)|*.*";
@@ -48,7 +72,9 @@ namespace BRAM_Manager {
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK) {
-                    initialDirectory = Path.GetDirectoryName(openFileDialog.FileName);
+                    savedInitialDirectory = Path.GetDirectoryName(openFileDialog.FileName);
+                    Properties.Settings.Default.savedInitialDirectory = savedInitialDirectory;
+                    Properties.Settings.Default.Save();
                     return openFileDialog.FileName;
                 }
             }
@@ -63,7 +89,7 @@ namespace BRAM_Manager {
             if (defaultDirectory.Length > 0)
                 saveFileDialog.InitialDirectory = defaultDirectory;
             else
-                saveFileDialog.InitialDirectory = initialDirectory;
+                saveFileDialog.InitialDirectory = savedInitialDirectory;
             if (defaultFileName.Length > 0)
                 saveFileDialog.FileName = defaultFileName;
             saveFileDialog.Filter = "BRAM files (*.bup;*.sav)|*.bup;*.sav|All files (*.*)|*.*";
@@ -71,7 +97,9 @@ namespace BRAM_Manager {
             saveFileDialog.RestoreDirectory = true;
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK) {
-                initialDirectory = Path.GetDirectoryName(saveFileDialog.FileName);
+                savedInitialDirectory = Path.GetDirectoryName(saveFileDialog.FileName);
+                Properties.Settings.Default.savedInitialDirectory = savedInitialDirectory;
+                Properties.Settings.Default.Save();
                 return saveFileDialog.FileName;
             }
 
@@ -91,6 +119,18 @@ namespace BRAM_Manager {
             return result;
         }
 
+        public string DecodeBytes(byte[] data) {
+            string result = string.Empty;
+
+            foreach (byte Byte in data) {
+                if (characterMap.Length > Byte) {
+                    result += characterMap[Byte];
+                }
+            }
+
+            return result;
+        }
+
         // Writes bytes to a byte array, given a starting location and a length
         public void WriteBytes(byte[] input, byte[] dest, int startLoc, int length) {
             int index = 0;
@@ -105,7 +145,17 @@ namespace BRAM_Manager {
             BRAM result = new BRAM();
             result.saves = new List<BRAMEntry>();
 
-            string dataString = System.IO.File.ReadAllText(file);
+            string dataString;
+
+            try {
+                dataString = System.IO.File.ReadAllText(file);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("File is in use.");
+                return result;
+            }
+            
             byte[] data = System.IO.File.ReadAllBytes(file);
             if (dataString.StartsWith("HUBM")) {
                 int length = data.Length;
@@ -127,7 +177,8 @@ namespace BRAM_Manager {
 
                     newEntry.length = nextLength;
                     newEntry.data = ReadBytes(data, nextSaveIndex, nextSaveIndex + nextLength);
-                    newEntry.name = System.Text.Encoding.UTF8.GetString(ReadBytes(data, nextSaveIndex + 6, nextSaveIndex + 16));
+                    //newEntry.name = System.Text.Encoding.UTF8.GetString(ReadBytes(data, nextSaveIndex + 6, nextSaveIndex + 16));
+                    newEntry.name = DecodeBytes(ReadBytes(data, nextSaveIndex + 6, nextSaveIndex + 16));
                     newEntry.startsAt = nextSaveIndex;
 
                     result.saves.Add(newEntry);
@@ -138,7 +189,7 @@ namespace BRAM_Manager {
                 result.loaded = true;
             }
             else {
-                System.Windows.Forms.MessageBox.Show("File is not a valid BRAM file.");
+                MessageBox.Show("File is not a valid BRAM file.");
             }
 
             return result;
@@ -211,7 +262,8 @@ namespace BRAM_Manager {
         // Main interface
 
         private void LeftBrowse_Click(object sender, EventArgs e) {
-            string path = OpenFileBrowser();
+            string openPath = LeftAddress.Text.Length > 0 ? Path.GetDirectoryName(LeftAddress.Text) : savedInitialDirectory;
+            string path = OpenFileBrowser(openPath);
             if (path.Length == 0)
                 return;
 
@@ -219,7 +271,8 @@ namespace BRAM_Manager {
         }
 
         private void RightBrowse_Click(object sender, EventArgs e) {
-            string path = OpenFileBrowser();
+            string openPath = RightAddress.Text.Length > 0 ? Path.GetDirectoryName(RightAddress.Text) : savedInitialDirectory;
+            string path = OpenFileBrowser(openPath);
             if (path.Length == 0)
                 return;
 
@@ -252,7 +305,7 @@ namespace BRAM_Manager {
                 selectedList = ref RightList;
             }
             else {
-                System.Windows.Forms.MessageBox.Show("Please select a file to delete.");
+                MessageBox.Show("Please select a file to delete.");
                 return;
             }
 
@@ -282,7 +335,7 @@ namespace BRAM_Manager {
 
         private void CopyButton_Click(object sender, EventArgs e) {
             if (!(leftBRAM.loaded && rightBRAM.loaded)) {
-                System.Windows.Forms.MessageBox.Show("Please load two BRAM files.");
+                MessageBox.Show("Please load two BRAM files.");
                 return;
             }
 
@@ -301,15 +354,24 @@ namespace BRAM_Manager {
                 otherList = LeftList;
             }
             else {
-                System.Windows.Forms.MessageBox.Show("Please select a file to copy.");
+                MessageBox.Show("Please select a file to copy.");
                 return;
             }
 
             BRAMEntry entry = selectedBRAM.saves[selectedList.SelectedIndex];
             if (otherBRAM.freeSpace < entry.length) {
-                System.Windows.Forms.MessageBox.Show("Not enough space in destination BRAM.");
+                MessageBox.Show("Not enough space in destination BRAM.");
                 return;
             }
+            
+            foreach (BRAMEntry otherEntry in otherBRAM.saves) {
+                if (otherEntry.name == entry.name) {
+                    if (MessageBox.Show("Filename already exists, which can cause issues. Are you sure you want to copy?", "", MessageBoxButtons.YesNo) == DialogResult.No) {
+                        return;
+                    }
+                }
+            }
+
             otherBRAM.saves.Add(entry);
             otherList.Items.Add(String.Format("{0} ({1}B)", entry.name, entry.length));
             otherBRAM.freeSpace -= entry.length;
@@ -333,7 +395,7 @@ namespace BRAM_Manager {
                 selectedList = ref RightList;
             }
             else {
-                System.Windows.Forms.MessageBox.Show("Please select a file to move.");
+                MessageBox.Show("Please select a file to move.");
                 return;
             }
 
@@ -360,7 +422,7 @@ namespace BRAM_Manager {
                 selectedList = ref RightList;
             }
             else {
-                System.Windows.Forms.MessageBox.Show("Please select a file to move.");
+                MessageBox.Show("Please select a file to move.");
                 return;
             }
 
@@ -396,6 +458,11 @@ namespace BRAM_Manager {
         }
 
         private void clearAllToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (leftBRAM.edited || rightBRAM.edited) {
+                if (MessageBox.Show("There are unsaved changes. Are you sure you want to clear?", "", MessageBoxButtons.YesNo) == DialogResult.No) {
+                    return;
+                }
+            }
             leftBRAM = new BRAM();
             rightBRAM = new BRAM();
             LeftList.Items.Clear();
@@ -404,6 +471,8 @@ namespace BRAM_Manager {
             RightAddress.Text = "";
             LeftFreeSpace.Text = "";
             RightFreeSpace.Text = "";
+            LeftEdited.Visible = false;
+            RightEdited.Visible = false;
         }
 
         // Misc
@@ -415,7 +484,7 @@ namespace BRAM_Manager {
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
             if (leftBRAM.edited || rightBRAM.edited) {
-                if (MessageBox.Show("There are unsaved changes. Are you sure you want to quit?", "BRAM Manager", MessageBoxButtons.YesNo) == DialogResult.No ){
+                if (MessageBox.Show("There are unsaved changes. Are you sure you want to quit?", "", MessageBoxButtons.YesNo) == DialogResult.No ){
                     e.Cancel = true;
                 }
             }
