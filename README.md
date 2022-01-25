@@ -45,7 +45,7 @@ BRAM Entry Header (16 bytes)
 * Checksum (2 bytes)
   * I'm not clever enough to understand this one but thankfully you can just ignore it unless you're developing your own game that uses save files in which case you're much smarter than me and probably understand it.
 * ID (2 bytes)
-  * Seems to always be 00 00. Not a very useful ID, it seems.
+  * Is usually 00 00 but sometimes it isn't.
 * File name (10 bytes)
   * The name of the save file. Editing this will make the save unreadable by the game, but it helps identify the data.
 
