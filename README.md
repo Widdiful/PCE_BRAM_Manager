@@ -43,7 +43,9 @@ BRAM Entry Header (16 bytes)
   * This includes the 16 bytes of the header. You can use this to find where the start of the next slot will be.
   * For the last slot, it will also let you know when the next free byte of memory is if you need to edit the header.
 * Checksum (2 bytes)
-  * I'm not clever enough to understand this one but thankfully you can just ignore it unless you're developing your own game that uses save files in which case you're much smarter than me and probably understand it.
+  * This is a negation of the sum of every byte in the entry, excluding the first four (starting at byte 1 of ID).
+  * Typically a negative signed Int16 (NOT UInt16). This + sum of bytes = 0.
+  * Example, if sum is 1383 (0x6705), checksum will be -1383 (0x99FA). Initial sum can be a negative Int16, in which case the checksum will be a positive Int16.
 * ID (2 bytes)
   * Is usually 00 00 but sometimes it isn't.
 * File name (10 bytes)
