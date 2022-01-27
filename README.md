@@ -14,6 +14,11 @@ These files can also be transferred to and from real hardware, detailed below, o
   * Delete will delete the selected save file, shifting other data down to make room.
 * Be sure to save your changes when you're finished.
 
+You can also merge multiple BRAM files into one with File > Merge Multiple
+* Select the files you wish to merge.
+* Select the save files you would like to keep. Ensure there is enough free space in the new file.
+* Click Merge and save the file.
+
 ## Transferring to and from real hardware
 I haven't seen an explaination of how this can be achieved on the internet, so I will explain here.
 * Connect your PCE to a Super SD System 3 (Super HD System 3 Pro should also work, but I haven't tested). Insert a Tennokoe Bank into the HuCard slot.
@@ -52,8 +57,8 @@ BRAM Entry Header (16 bytes)
   * The name of the save file. Editing this will make the save unreadable by the game, but it helps identify the data.
 
 BRAM Entry Data
-* This is the save data itself for as long as the length in the header said it would be (minus 16 bytes as it includes the header). Could be fun to mess around with if you're into that. Some games will use one chunk of data for multiple save slots.
+* This is the save data itself for as long as the length in the header said it would be (minus 16 bytes as it includes the header). Could be fun to mess around with if you're into that. Some games will use one BRAM entry for multiple save slots.
 
-Afterwards, the very next byte will either be the start of the next entry (another entry header followed by the data) or "00 00" to indicate the end. This first byte is the start of the next available slot.
+Afterwards, the very next byte will either be the start of the next entry (another entry header followed by the data) or "00 00" to indicate the end. This first byte is the start of the next available slot. Some BRAM entries may have "00 00" at the end of its data, so make sure you have the correct "00 00".
 
 This program will of course manage all of this for you, but I'm putting this information out there for anyone who's curious.
