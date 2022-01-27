@@ -14,23 +14,24 @@ namespace BRAM_Manager {
         public string savedInitialDirectory = "c:\\";
         public BRAM leftBRAM, rightBRAM;
 
+        // Slightly inaccurate character map, inaccuracies are to ensure no duplicates for accurate encoding
         public char[] characterMap = new char[] {
-        ' ', '▁', '▂', '▃', '▄', '▅', '▆', '▇', '█', '♤', '♡', '◇', '♧', '○', '●', '/',
+        ' ', '▁', '▂', '▃', '▄', '▅', '▆', '▇', '█', '♤', '♡', '◇', '♧', '○', '●', '/',
         '\\', '円', '年', '月', '日', '時', '分', '秒', '◢', '◣', '◥', '◤', '→', '←', '↑', '↓',
-        ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
+        ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '／',
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?',
         '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
         'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '￥', ']', '^', '_',
-        ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-        'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', ':', '}', '~', '☓',
-        ' ', '。', '「', '」', '、', '・', 'を', 'ぁ', '╭', '─', '╮', '│', '│', '╰', '─', '╯',
+        ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+        'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '¦', '}', '~', '☓',
+        ' ', '。', '「', '」', '、', '・', 'を', 'ぁ', '╭', '─', '╮', '│', '｜', '╰', '━', '╯',
         'ー', 'あ', 'い', 'う', 'え', 'お', 'か', 'き', 'く', 'け', 'こ', 'さ', 'し', 'す', 'せ', 'そ',
-        '　', '。', '「', '」', '、', '・', 'ヲ', 'ァ', '┬', '│', '┴', 'ォ', 'ャ', 'ュ', 'ョ', 'ッ',
-        'ー', 'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ', 'サ', 'シ', 'ス', 'セ', 'ソ',
+        '　', '｡', '｢', '｣', '､', '･', 'ヲ', 'ァ', '┬', '|', '┴', 'ォ', 'ャ', 'ュ', 'ョ', 'ッ',
+        '－', 'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ', 'サ', 'シ', 'ス', 'セ', 'ソ',
         'タ', 'チ', 'ツ', 'テ', 'ト', 'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ハ', 'ヒ', 'フ', 'ヘ', 'ホ', 'マ',
         'ミ', 'ム', 'メ', 'モ', 'ヤ', 'ユ', 'ヨ', 'ラ', 'リ', 'ル', 'レ', 'ロ', 'ワ', 'ン', '゛', '゜',
         'た', 'ち', 'つ', 'て', 'と', 'な', 'に', 'ぬ', 'ね', 'の', 'は', 'ひ', 'ふ', 'へ', 'ほ', 'ま',
-        'み', 'む', 'め', 'も', 'や', 'ゆ', 'よ', 'ら', 'り', 'る', 'れ', 'ろ', 'わ', 'ん', '゛', '©'};
+        'み', 'む', 'め', 'も', 'や', 'ゆ', 'よ', 'ら', 'り', 'る', 'れ', 'ろ', 'わ', 'ん', '゙', '©'};
 
         public struct BRAM {
             public byte[] data;
@@ -82,6 +83,26 @@ namespace BRAM_Manager {
             return string.Empty;
         }
 
+        // Opens a file browser and returns the paths to the selected files
+        public string[] OpenMultiFileBrowser(string initialDirectory) {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                openFileDialog.InitialDirectory = initialDirectory;
+                openFileDialog.Filter = "BRAM files (*.bup;*.sav)|*.bup;*.sav|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+                openFileDialog.Multiselect = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                    savedInitialDirectory = Path.GetDirectoryName(openFileDialog.FileName);
+                    Properties.Settings.Default.savedInitialDirectory = savedInitialDirectory;
+                    Properties.Settings.Default.Save();
+                    return openFileDialog.FileNames;
+                }
+            }
+
+            return new string[0];
+        }
+
         // Opens a file browser and returns a path to the new file
         public string SaveFileBrowser(string defaultDirectory = "", string defaultFileName = "") {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -119,6 +140,7 @@ namespace BRAM_Manager {
             return result;
         }
 
+        // Converts bytes into a human-readable form following the PC Engine character map
         public string DecodeBytes(byte[] data) {
             string result = string.Empty;
 
@@ -131,13 +153,55 @@ namespace BRAM_Manager {
             return result;
         }
 
+        // Converts a string into valid bytes following the PC Engine character map
+        public byte[] EncodeString(string data) {
+            byte[] result = new byte[data.Length];
+
+            for (int i = 0; i < data.Length; i++) {
+                char Char = data[i];
+                if (characterMap.Contains(Char)) {
+                    result[i] = Convert.ToByte(Array.IndexOf(characterMap, Char));
+                }
+            }
+
+            return result;
+        }
+
         // Writes bytes to a byte array, given a starting location and a length
         public void WriteBytes(byte[] input, byte[] dest, int startLoc, int length) {
             int index = 0;
             for (int i = startLoc; i < startLoc + length; i++) {
-                dest[i] = input[index];
+                if (dest.Length > i && input.Length > index) {
+                    dest[i] = input[index];
+                    index++;
+                }
+            }
+        }
+
+        // Calculates the checksum for a given BRAM entry
+        public byte[] CalculateChecksum(byte[] data, int length) {
+            byte[] result = new byte[2];
+            int dataSize = length - 4;
+            byte[] newData = new byte[dataSize];
+
+            // get data bytes minus first four bytes
+            int index = 0;
+            for (int i = 4; i < length; i++) {
+                newData[index] = data[i];
                 index++;
             }
+
+            // checksum is the sum of all bytes
+            int sum = 0;
+            foreach (byte Byte in newData) {
+                sum += Byte;
+            }
+
+            // stored checksum is the negation of the checksum
+            int checksum = sum * -1;
+            result = BitConverter.GetBytes(checksum);
+
+            return result;
         }
 
         // Reads a file and converts it to a BRAM data entry
@@ -252,6 +316,16 @@ namespace BRAM_Manager {
 
                 textBox.Text = path;
                 label.Text = String.Format("Free: {0}B", bram.freeSpace);
+            }
+        }
+
+        // Opens a file to a free BRAM slot
+        public void QuickOpen(string path) {
+            if (!leftBRAM.loaded) {
+                OpenAndLoadFile(path, ref leftBRAM, ref LeftList, ref LeftAddress, ref LeftFreeSpace);
+            }
+            else if (!rightBRAM.loaded) {
+                OpenAndLoadFile(path, ref rightBRAM, ref RightList, ref RightAddress, ref RightFreeSpace);
             }
         }
 
@@ -448,13 +522,22 @@ namespace BRAM_Manager {
             if (newFilePath.Length > 0) {
                 File.WriteAllBytes(newFilePath, newFile);
 
-                if (!leftBRAM.loaded) {
-                    OpenAndLoadFile(newFilePath, ref leftBRAM, ref LeftList, ref LeftAddress, ref LeftFreeSpace);
-                }
-                else if (!rightBRAM.loaded) {
-                    OpenAndLoadFile(newFilePath, ref rightBRAM, ref RightList, ref RightAddress, ref RightFreeSpace);
-                }
+                QuickOpen(newFilePath);
             }
+        }
+
+        private void mergeMultipleToolStripMenuItem_Click(object sender, EventArgs e) {
+            string openPath = savedInitialDirectory;
+            string[] path = OpenMultiFileBrowser(openPath);
+            if (path.Length == 0)
+                return;
+
+            BRAM_Merge mergeForm = new BRAM_Merge();
+            mergeForm.InitialiseForm(this, path);
+            mergeForm.StartPosition = FormStartPosition.Manual;
+            mergeForm.Left = this.Left;
+            mergeForm.Top = this.Top;
+            mergeForm.Show();
         }
 
         private void clearAllToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -477,9 +560,15 @@ namespace BRAM_Manager {
 
         // Misc
 
+        // Ensuring only one list has a selected item at a time
         private void LeftList_SelectedIndexChanged(object sender, EventArgs e) {
             if (LeftList.Focused)
                 RightList.ClearSelected();
+        }
+
+        private void RightList_SelectedIndexChanged(object sender, EventArgs e) {
+            if (RightList.Focused)
+                LeftList.ClearSelected();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
@@ -488,11 +577,6 @@ namespace BRAM_Manager {
                     e.Cancel = true;
                 }
             }
-        }
-
-        private void RightList_SelectedIndexChanged(object sender, EventArgs e) {
-            if (RightList.Focused)
-                LeftList.ClearSelected();
         }
     }
 }

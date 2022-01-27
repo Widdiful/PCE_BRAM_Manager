@@ -44,6 +44,7 @@
             this.RightFreeSpace = new System.Windows.Forms.Label();
             this.LeftEdited = new System.Windows.Forms.Label();
             this.RightEdited = new System.Windows.Forms.Label();
+            this.mergeMultipleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,6 +62,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newBRAMToolStripMenuItem,
+            this.mergeMultipleToolStripMenuItem,
             this.clearAllToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -69,14 +71,14 @@
             // newBRAMToolStripMenuItem
             // 
             this.newBRAMToolStripMenuItem.Name = "newBRAMToolStripMenuItem";
-            this.newBRAMToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.newBRAMToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newBRAMToolStripMenuItem.Text = "New BRAM";
             this.newBRAMToolStripMenuItem.Click += new System.EventHandler(this.newBRAMToolStripMenuItem_Click);
             // 
             // clearAllToolStripMenuItem
             // 
             this.clearAllToolStripMenuItem.Name = "clearAllToolStripMenuItem";
-            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.clearAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.clearAllToolStripMenuItem.Text = "Clear All";
             this.clearAllToolStripMenuItem.Click += new System.EventHandler(this.clearAllToolStripMenuItem_Click);
             // 
@@ -234,6 +236,13 @@
             this.RightEdited.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.RightEdited.Visible = false;
             // 
+            // mergeMultipleToolStripMenuItem
+            // 
+            this.mergeMultipleToolStripMenuItem.Name = "mergeMultipleToolStripMenuItem";
+            this.mergeMultipleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mergeMultipleToolStripMenuItem.Text = "Merge Multiple";
+            this.mergeMultipleToolStripMenuItem.Click += new System.EventHandler(this.mergeMultipleToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -259,6 +268,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "BRAM Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -291,6 +301,7 @@
         private System.Windows.Forms.ToolStripMenuItem clearAllToolStripMenuItem;
         private System.Windows.Forms.Label LeftEdited;
         private System.Windows.Forms.Label RightEdited;
+        private System.Windows.Forms.ToolStripMenuItem mergeMultipleToolStripMenuItem;
     }
 }
 
