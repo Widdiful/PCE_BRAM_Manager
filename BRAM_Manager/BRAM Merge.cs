@@ -1,93 +1,124 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BRAM_Manager {
-    public partial class BRAM_Merge : Form {
-        MainForm mainForm;
-        MainForm.BRAM mergeBRAM;
-        List<MainForm.BRAMEntry> SavesToMerge = new List<MainForm.BRAMEntry>();
-        int freeSpace = 0;
+	public partial class BRAM_Merge : Form {
+		MainForm mainForm;
+		BRAM mergeBRAM;
+		List<BRAMEntry> SavesToMerge = new List<BRAMEntry>();
+		int freeSpace = 0;
+		int hoveredIndex = -1;
 
-        public BRAM_Merge() {
-            InitializeComponent();
-        }
+		public BRAM_Merge() {
+			InitializeComponent();
+		}
 
-        public void InitialiseForm(MainForm main, string[] paths) {
-            mainForm = main;
+		public void InitialiseForm(MainForm main, string[] paths) {
+			mainForm = main;
 
-            // initialise new BRAM
-            mergeBRAM = new MainForm.BRAM();
-            byte[] newFileBytes = new byte[] { 0x48, 0x55, 0x42, 0x4D, 0x00, 0x88, 0x10, 0x80 };
-            byte[] newFile = new byte[2048];
-            byte[] newHeader = new byte[16];
+			// initialise new BRAM
+			mergeBRAM = new BRAM();
 
-            main.WriteBytes(newFileBytes, newFile, 0, 8);
-            mergeBRAM.data = newFile;
-            main.WriteBytes(newFileBytes, newHeader, 0, 8);
-            mergeBRAM.header = newHeader;
-            mergeBRAM.nextSlot = 16;
-            mergeBRAM.freeSpace = freeSpace = 2032;
-            mergeBRAM.saves = new List<MainForm.BRAMEntry>();
+			// Find all save data and add it to a list
+			MergeAddress.Text = "";
+			MergeList.Items.Clear();
+			foreach (string path in paths) {
+				// Provide useful file name
+				string fileName = Path.GetFileName(path);
+				if (fileName == "bram_exp.brm") {
+					fileName = Path.GetFileName(Path.GetDirectoryName(path));
+				}
 
-            // Find all save data and add it to a list
-            MergeAddress.Text = "";
-            MergeList.Items.Clear();
-            foreach (string path in paths) {
-                MainForm.BRAM newBRAM = main.ReadFile(path);
-                if (newBRAM.loaded) {
-                    foreach (MainForm.BRAMEntry save in newBRAM.saves) {
-                        SavesToMerge.Add(save);
-                        MergeList.Items.Add(String.Format("{0} ({1}B)", save.name, save.length));
-                    }
-                    MergeAddress.Text += String.Format("\"{0}\" ", path);
-                }
-            }
+				// Read data from path
+				BRAM newBRAM = DataFuncLib.ReadFile(path);
+				if (newBRAM.loaded) {
+					foreach (BRAMEntry save in newBRAM.saves) {
+						SavesToMerge.Add(save);
 
-            MergeFreeSpace.Text = String.Format("Free: {0}B", mergeBRAM.freeSpace);
-        }
+						// Adding a tab to make it look nice, \t is too big
+						string tab = String.Concat(Enumerable.Repeat(" ", IntNumOfDigits(ByteFuncLib.maxBRAMSize) - IntNumOfDigits(save.length)));
 
-        private void MergeList_SelectedIndexChanged(object sender, EventArgs e) {
-            // Calculate how much free space would be left after adding all selected files
-            freeSpace = mergeBRAM.freeSpace;
+						MergeList.Items.Add(String.Format("{0} ({1}B) {2}- {3}", save.name, save.length, tab, fileName));
+					}
+					MergeAddress.Text += String.Format("\"{0}\" ", path);
+				}
+			}
 
-            foreach (int item in MergeList.SelectedIndices) {
-                freeSpace -= SavesToMerge[item].length;
-            }
+			MergeFreeSpace.Text = String.Format("Free: {0}B", mergeBRAM.freeSpace);
+		}
 
-            MergeFreeSpace.Text = String.Format("Free: {0}B", freeSpace);
-        }
+		public void InitialiseForm(MainForm main, IEnumerable<string> paths) {
+			// Find BRAM files in folders
+			List<string> files = new List<string>();
+			foreach (string path in paths) {
+				foreach (string file in Directory.EnumerateFiles(path, "*.*")) {
+					if (DataFuncLib.IsValidBRAMFile(file)) {
+						files.Add(file);
+					}
+				}
+			}
 
-        private void MergeButton_Click(object sender, EventArgs e) {
-            if (freeSpace < 0) {
-                MessageBox.Show("Not enough space! Please select fewer saves.");
-                return;
-            }
-            if (freeSpace >= mergeBRAM.freeSpace) {
-                MessageBox.Show("No items selected.");
-                return;
-            }
+			// Regular initialisation
+			InitialiseForm(main, files.ToArray());
+		}
 
-            string path = mainForm.SaveFileBrowser();
-            if (path == "") {
-                return;
-            }
+		public int IntNumOfDigits(int inInt) {
+			return (int)Math.Floor(Math.Log10(inInt) + 1);
+		}
 
-            // Add saved files to BRAM and save it
-            foreach (int item in MergeList.SelectedIndices) {
-                mergeBRAM.saves.Add(SavesToMerge[item]);
-            }
+		private void MergeList_SelectedIndexChanged(object sender, EventArgs e) {
+			// Calculate how much free space would be left after adding all selected files
+			freeSpace = mergeBRAM.freeSpace;
 
-            mainForm.SaveFile(ref mergeBRAM, path);
-            mainForm.QuickOpen(path);
+			foreach (int item in MergeList.SelectedIndices) {
+				freeSpace -= SavesToMerge[item].length;
+			}
 
-            Close();
-        }
-    }
+			MergeFreeSpace.Text = String.Format("Free: {0}B", freeSpace);
+		}
+
+		private void MergeButton_Click(object sender, EventArgs e) {
+			if (freeSpace < 0) {
+				MessageBox.Show("Not enough space! Please select fewer saves.");
+				return;
+			}
+			if (freeSpace >= mergeBRAM.freeSpace) {
+				MessageBox.Show("No items selected.");
+				return;
+			}
+
+			string path = GuiFuncLib.SaveFileBrowser();
+			if (path == "") {
+				return;
+			}
+
+			// Add saved files to BRAM and save it
+			foreach (int item in MergeList.SelectedIndices) {
+				mergeBRAM.saves.Add(SavesToMerge[item]);
+			}
+
+			DataFuncLib.SaveFile(ref mergeBRAM, path);
+			mainForm.QuickOpen(path);
+
+			Close();
+		}
+
+		// Show the full name of the hovered item
+		private void MergeList_MouseMove(object sender, MouseEventArgs e) {
+			int newHoverIndex = MergeList.IndexFromPoint(e.Location);
+			if (newHoverIndex != hoveredIndex) {
+				hoveredIndex = newHoverIndex;
+				if (hoveredIndex >= 0) {
+					toolTip1.SetToolTip(MergeList, MergeList.Items[hoveredIndex].ToString());
+				}
+			}
+		}
+
+		private void MergeList_MouseLeave(object sender, EventArgs e) {
+			hoveredIndex = -1;
+		}
+	}
 }

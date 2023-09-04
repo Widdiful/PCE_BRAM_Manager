@@ -1,0 +1,43 @@
+1.03
+Lots of Everdrive functionality:
+Added transfer tool, which allows you to easily transfer your per-game save files between SSDS3 and Turbo Everdrive Pro
+Added support for Turbo Everdrive Pro .brm files
+Added option to merge from multiple folders
+
+Quality of life features:
+Added file/folder name of BRAM file to merge window
+Added drag-and-drop functionality
+Added option to disable warnings
+Added lots of tooltips
+Added an about page
+Changed the font in the BRAM viewers
+Removed option to create new BRAM file, as empty/unloaded BRAM slots now function as empty BRAM files which can be saved/edited
+	
+Major refactoring of code, now more organised and with separate helper function libraries. Optimisations and removed magic numbers
+
+1.02
+Added Merge Multiple feature
+Behind-the-scenes work to support renaming in future
+
+1.01
+Added an icon to the exe (oops!)
+Added dialog for confirmation when creating duplicate save data
+Added dialog for clicking "Clear All" with unsaved edits
+Saving last used directory for next time program is launched
+Each browse button now defaults to open in the last folder for that side, instead of either side
+Implemented proper text decoding
+Resized BRAM windows to see longer names
+Disable window resizing
+
+1.0
+Cleaned up code
+Added option to create a new BRAM file
+Added option to unload both BRAM files
+Added .sav to BRAM filter for emulators
+Added "Edited" sign for unsaved edits
+Save button now brings up file browser
+Closing the program with unsaved changes will prompt you to save them
+
+0.1
+Ability to save and load two BRAM files
+Copy, delete and reorder save files
